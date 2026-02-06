@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Day Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #e74c3c;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .heart {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+
+        .question {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .option:hover {
+            background: #ffe6e6;
+            border-color: #ff6b9d;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: #ff6b9d;
+            color: white;
+            border-color: #ff6b9d;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results {
+            display: none;
+            text-align: center;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .score {
+            font-size: 3rem;
+            color: #e74c3c;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .message {
+            font-size: 1.3rem;
+            color: #555;
+            margin: 20px 0;
+        }
+
+        .progress {
+            text-align: center;
+            color: #888;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .start-screen {
+            text-align: center;
+        }
+
+        .start-screen.hidden {
+            display: none;
+        }
+
+        .start-button {
+            margin-top: 30px;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+        }
+
+        .description {
+            color: #666;
+            font-size: 1.1rem;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="start-screen" id="startScreen">
+            <h1>Valentine's Day Quiz</h1>
+            <div class="heart">💖</div>
+            <p class="description">
+                Test your knowledge about the most romantic day of the year! 
+                Answer questions about Valentine's Day history, traditions, and fun facts.
+            </p>
+            <button class="start-button" onclick="startQuiz()">Start Quiz</button>
+        </div>
+
+        <div id="quizContent" style="display: none;">
+            <h1>Valentine's Day Quiz</h1>
+            <div class="heart">💕</div>
+            <div class="progress" id="progress"></div>
+
+            <div class="question-container active" id="question1">
+                <div class="question">1. In which country did Valentine's Day originate?</div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(1, 0)">France</div>
+                    <div class="option" onclick="selectOption(1, 1)">Italy</div>
+                    <div class="option" onclick="selectOption(1, 2)">England</div>
+                    <div class="option" onclick="selectOption(1, 3)">Greece</div>
+                </div>
+            </div>
+
+            <div class="question-container" id="question2">
+                <div class="question">2. What does the "X" in "XOXO" represent?</div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(2, 0)">Hugs</div>
+                    <div class="option" onclick="selectOption(2, 1)">Kisses</div>
+                    <div class="option" onclick="selectOption(2, 2)">Love</div>
+                    <div class="option" onclick="selectOption(2, 3)">Hearts</div>
+                </div>
+            </div>
+
+            <div class="question-container" id="question3">
+                <div class="question">3. Which flower is most associated with Valentine's Day?</div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(3, 0)">Tulip</div>
+                    <div class="option" onclick="selectOption(3, 1)">Lily</div>
+                    <div class="option" onclick="selectOption(3, 2)">Rose</div>
+                    <div class="option" onclick="selectOption(3, 3)">Sunflower</div>
+                </div>
+            </div>
+
+            <div class="question-container" id="question4">
+                <div class="question">4. What percentage of Valentine's Day cards are purchased by women?</div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(4, 0)">50%</div>
+                    <div class="option" onclick="selectOption(4, 1)">65%</div>
+                    <div class="option" onclick="selectOption(4, 2)">75%</div>
+                    <div class="option" onclick="selectOption(4, 3)">85%</div>
+                </div>
+            </div>
+
+            <div class="question-container" id="question5">
+                <div class="question">5. Who is Cupid's mother in Roman mythology?</div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(5, 0)">Juno</div>
+                    <div class="option" onclick="selectOption(5, 1)">Venus</div>
+                    <div class="option" onclick="selectOption(5, 2)">Diana</div>
+                    <div class="option" onclick="selectOption(5, 3)">Minerva</div>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <button id="prevBtn" onclick="changeQuestion(-1)" disabled>Previous</button>
+                <button id="nextBtn" onclick="changeQuestion(1)">Next</button>
+            </div>
+        </div>
+
+        <div class="results" id="results">
+            <h1>Quiz Complete!</h1>
+            <div class="heart">💝</div>
+            <div class="score" id="score"></div>
+            <div class="message" id="message"></div>
+            <button onclick="restartQuiz()">Take Quiz Again</button>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = 5;
+        const answers = {};
+        
+        // Correct answers: 1-Italy(1), 2-Kisses(1), 3-Rose(2), 4-85%(3), 5-Venus(1)
+        const correctAnswers = {
+            1: 1,
+            2: 1,
+            3: 2,
+            4: 3,
+            5: 1
+        };
+
+        function startQuiz() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('quizContent').style.display = 'block';
+            updateProgress();
+        }
+
+        function selectOption(question, option) {
+            // Remove previous selection
+            const options = document.querySelectorAll(`#question${question} .option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selection to clicked option
+            options[option].classList.add('selected');
+            
+            // Store answer
+            answers[question] = option;
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function changeQuestion(direction) {
+            // Hide current question
+            document.getElementById(`question${currentQuestion}`).classList.remove('active');
+            
+            // Update current question number
+            currentQuestion += direction;
+            
+            // Show new question or results
+            if (currentQuestion > totalQuestions) {
+                showResults();
+                return;
+            }
+            
+            document.getElementById(`question${currentQuestion}`).classList.add('active');
+            
+            // Update button states
+            document.getElementById('prevBtn').disabled = currentQuestion === 1;
+            
+            // Check if current question is answered
+            if (answers[currentQuestion] !== undefined) {
+                document.getElementById('nextBtn').disabled = false;
+            } else {
+                document.getElementById('nextBtn').disabled = true;
+            }
+            
+            // Change button text on last question
+            if (currentQuestion === totalQuestions) {
+                document.getElementById('nextBtn').textContent = 'Submit';
+            } else {
+                document.getElementById('nextBtn').textContent = 'Next';
+            }
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            document.getElementById('progress').textContent = `Question ${currentQuestion} of ${totalQuestions}`;
+        }
+
+        function showResults() {
+            document.getElementById('quizContent').style.display = 'none';
+            document.getElementById('results').classList.add('active');
+            
+            let score = 0;
+            for (let q = 1; q <= totalQuestions; q++) {
+                if (answers[q] === correctAnswers[q]) {
+                    score++;
+                }
+            }
+            
+            document.getElementById('score').textContent = `${score} / ${totalQuestions}`;
+            
+            let message = '';
+            if (score === totalQuestions) {
+                message = '🎉 Perfect! You\'re a Valentine\'s Day expert!';
+            } else if (score >= 4) {
+                message = '💕 Great job! You know your Valentine\'s Day trivia!';
+            } else if (score >= 3) {
+                message = '💖 Not bad! You have some good knowledge!';
+            } else if (score >= 2) {
+                message = '💝 Keep learning! Valentine\'s Day has interesting history!';
+            } else {
+                message = '💗 There\'s always next year! Try again!';
+            }
+            
+            document.getElementById('message').textContent = message;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 1;
+            Object.keys(answers).forEach(key => delete answers[key]);
+            
+            // Remove all selections
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            
+            // Reset display
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('startScreen').classList.remove('hidden');
+            
+            // Reset buttons
+            document.getElementById('prevBtn').disabled = true;
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('nextBtn').textContent = 'Next';
+            
+            // Reset questions
+            document.querySelectorAll('.question-container').forEach((q, i) => {
+                if (i === 0) {
+                    q.classList.add('active');
+                } else {
+                    q.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
